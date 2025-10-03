@@ -75,4 +75,58 @@ async def post_trade(payload: dict):
     return {"status": "ok"}
 ```
 
-## Redis stream consumer 
+## Redis stream consumer (batch uploader) - conceptual
+
+Use XADD to append messages.
+
+Consumers use XREADGROUP to read and ACK messsages.
+
+Batch; read N messages or up to T ms, then bulk insert into DB.
+
+Use consumer groups for scaling and replay.
+
+## Timescale schema example (Postgres SQL)
+```sql
+CREATE TABLE raw_trades (
+    id BIGSERIAL PRIMARY KEY,
+    exchange TEXT,
+    symbol TEXT,
+    price NUMERIC,
+    size NUMERIC,
+    side TEXT,
+    ts TIMESTAMPTZ NOT NULL DEFAULT now(),
+    payload JSONB
+);
+
+
+SELECT create_hypertable('raw_trades', 'ts', chucnk_time_intervl => interval '1 day');
+
+
+CREATE TABLE candles_1m (
+    symbol TEXT,
+    interval_start TIMESTAMPTZ,
+    open NUMERIC,
+    high NUMERIC,
+    low NUMERIC,
+    close NUMERIC,
+    volume NUMERIC,
+    trades_count INT,
+    PRIMARY KEY (symbol, interval_start)
+);
+```
+
+## Deployment notes
+
+Start with docker-compose: FastAPI, Redis, TimescaleDB, simple poller.
+
+Use persistent volumes for Timescale DB.
+
+For prod: k8s with HPA (autoscale batch workers based on Redis queue depth), use node affinity for database pods.
+
+## Operational checklist
+
+Add liveness.readiness probes for pollers and batch workers.
+
+Maintain SLAs for queue length and agregation lag.
+
+Regu
