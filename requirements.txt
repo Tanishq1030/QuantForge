@@ -1,0 +1,47 @@
+# --- FastAPI + Web ---
+fastapi
+uvicorn[standard]
+python-multipart
+
+# --- Database + ORM ---
+sqlalchemy
+psycopg2-binary
+alembic
+asyncpg
+
+# --- Redis / Caching ---
+redis
+slowapi        # rate-limiting middleware
+
+# --- Auth & Security ---
+python-jose[cryptography]
+passlib[argon2]
+bcrypt
+pyotp
+email-validator
+requests
+
+# --- Data + AI Core ---
+pandas
+numpy
+scikit-learn
+pydantic
+pydantic-settings
+loguru
+httpx
+huggingface-hub
+
+# --- Vector DB (optional) ---
+weaviate-client
+
+# --- MinIO / Object Storage ---
+boto3
+minio
+
+# --- Background / Workers ---
+celery
+
+# --- Dev Tools ---
+python-dotenv
+black
+isort
