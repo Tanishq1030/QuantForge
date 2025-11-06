@@ -1,25 +1,36 @@
-# backend/core/logging.py
-"""
-Structured logging via loguru.
-Provides a single `logger` object for consistent logging across the app.
-"""
-
-from loguru import logger as _logger
+import logging
 import sys
-from .config import settings
+from backend.core.config import settings
 
-# Remove default handlers and configure desired format/level
-_logger.remove()
+# Custom formatter for consistent logs
+class LogFormatter(logging.Formatter):
+    def format(self, record):
+        log_format = (
+            f"[{record.levelname}] "
+            f"{record.asctime} | "
+            f"{record.name:<25} | "
+            f"{record.message}"
+        )
+        return log_format
 
-# Add a console sink with a simple structured format
-_logger.add(
-    sys.stdout,
-    level=settings.LOG_LEVEL,
-    format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
-           "<level>{level: <8}</level> | "
-           "<cyan>{module}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
-           "<level>{message}</level>"
-)
 
-# For production, you may add file sinks or aggregation (ELK / Fluentd / Cloud logging)
-logger = _logger
+def get_logger(name: str) -> logging.Logger:
+    """
+    Returns a configured logger with console handler.
+    All logs use the same consistent structure across the app.
+    """
+    logger = logging.getLogger(name)
+
+    if not logger.handlers:
+        handler = logging.StreamHandler(sys.stdout)
+        formatter = logging.Formatter(
+            "[%(asctime)s] [%(levelname)s] %(name)s: %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+        logger.setLevel(settings.LOG_LEVEL.upper())
+        logger.propagate = False
+
+    return logger

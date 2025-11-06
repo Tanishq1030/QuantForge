@@ -3,8 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="quantforge-ai" />
   </component>
-  <component name="GitLabDefaultAccount">
-    <option name="defaultAccountId" value="4e20fb9e-d72c-4b40-9cd3-f1f4b94d3371" />
-  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="QuantForge-ai" project-jdk-type="Python SDK" />
 </project>

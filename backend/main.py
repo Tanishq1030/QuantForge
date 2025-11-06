@@ -1,121 +1,91 @@
-"""
-FastAPI entrypoint for QuantForge AI Engine (Phase 1)
-Mounts routers, sets up middleware, and exposes health and readiness checks.
-
-This file must live at: QuantForge/backend/main.py
-"""
+# backend/main.py
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
-# Import project config & logger
 from backend.core.config import settings
-from backend.core.logging import logger
-from backend.utils.cache import RedisCLient
+from backend.core.logging import get_logger
+from backend.db.session import engine
+from backend.utils.cache import RedisClient
+from backend.utils.minio_client import MinioClient
+# from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
+import sqlalchemy
 
-redis_client = RedisCLient()
+logger = get_logger(__name__)
 
-# Import routers
-try:
-	from backend.api.infer import router as infer_router
-except Exception:
-	infer_router = None
-	logger.warning("infer router not mounted (backend/api/infer.py missing)")
-	
-try:
-	from backend.api.system import router as system_router
-except Exception:
-	system_router = None
-	logger.warning("system router not mounted (backend/api/system.py missing)")
-	
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description="QuantForge AI Engine — Core Backend Runtime",
+)
 
-def create_app() -> FastAPI:
-	"""Factory to create the FastAPI app with middleware and routes."""
-	app = FastAPI(
-		title=settings.APP_NAME,
-		version=settings.APP_VERSION,
-		description="QuantForge AI Engine - Phase 1 core API",
-		docs_url="/docs" if settings.ENV != "prod" else None,
-		redoc_url="/redoc" if settings.ENV != "prod" else None,
-	)
-	
-	# CORS middleware -- restricts origins in production via .env
-	
-	app.add_middleware(
-		CORSMiddleware,
-		allow_origins=settings.ALLOWED_ORIGINS,
-		allow_credentials=True,
-		allow_methods=["*"],
-		allow_headers=["*"],
-	)
-	
-	# Include routers (if available)
-	if infer_router:
-		app.include_router(infer_router, prefix="/v1")
-		logger.info("Normal infer router at /v1")
-	if system_router:
-		app.include_router(system_router, prefix="v1/system")
-		logger.info("Mounted system router at /v1/system")
-		
-	
-	# Basic health check
-	@app.get("/health", tags=["system"])
-	async def health():
-		"""
-		Health endpoint used by load balancers, Cloudflare, and readiness probes.
-		Returns service status and basic diagnostics.
-		"""
-		return JSONResponse({"status": "ok", "service": settings.APP_NAME, "env": settings.ENV})
-	
-	# Ready endpoint (can be extended to check DB, Weaviate, Ollama, etc)
-	@app.get("/ready", tags=["system"])
-	async def ready():
-		"""
-		Readiness check - currently light. Replace with full connectivity checks later.
-		"""
-		return JSONResponse({"ready": True})
-	
-	return app
 
-app = create_app()
+# Initialize reusable clients
+redis_client = RedisClient()
+minio_client = MinioClient()
+# Weaviate client will be connected in Phase 1 Step 2
 
-# When running uvicorn from project root:
-# uvicorn backend.main:app --reload --port 8001
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+# --- HEALTH & SYSTEM ROUTES --- #
+
+@app.get("/v1/health", tags=["System"])
+async def health_check():
+    """
+    Basic health check endpoint.
+    Returns a simple OK response to verify that the FastAPI service is running.
+    """
+    return JSONResponse({"status": "ok", "app": settings.APP_NAME})
+
+
+@app.get("/v1/system/ping", tags=["System"])
+async def ping():
+    """
+    Simple API ping — ensures that routing and server are alive.
+    """
+    logger.info("Received ping request.")
+    return {"message": "pong", "app": settings.APP_NAME}
+
+
+@app.get("/v1/system/dependencies", tags=["System"])
+async def check_dependencies():
+    """
+    Verify connectivity for Redis, PostgreSQL, MinIO, and Weaviate.
+    Returns a structured status dictionary.
+    """
+    status = {}
+
+    # --- Redis ---
+    try:
+        if redis_client.client:
+            redis_client.set("quantforge:ping", "1", ex=5)
+            val = redis_client.get("quantforge:ping")
+            status["redis"] = "✅ Connected" if val == "1" else "⚠️ Read/Write issue"
+        else:
+            status["redis"] = "❌ Not Connected"
+    except Exception as e:
+        status["redis"] = f"❌ Error: {str(e)}"
+
+    # --- PostgreSQL ---
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(sqlalchemy.text("SELECT NOW()")).fetchone()
+            status["postgres"] = f"✅ Connected — {result[0]}"
+    except Exception as e:
+        status["postgres"] = f"❌ Error: {str(e)}"
+
+    # --- MinIO ---
+    try:
+        bucket_name = settings.MINIO_BUCKET
+        if bucket_name in [b.name for b in minio_client.client.list_buckets()]:
+            status["minio"] = f"✅ Connected — bucket '{bucket_name}' found"
+        else:
+            status["minio"] = "⚠️ Connected but bucket missing"
+    except Exception as e:
+        status["minio"] = f"❌ Error: {str(e)}"
+
+    # --- Weaviate (will be active next step) ---
+    try:
+        status["weaviate"] = "⏳ Pending setup"
+    except Exception as e:
+        status["weaviate"] = f"❌ Error: {str(e)}"
+
+    logger.info("Dependency check results: " + str(status))
+    return JSONResponse(status)

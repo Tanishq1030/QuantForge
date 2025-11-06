@@ -34,6 +34,7 @@ huggingface-hub
 # --- Vector DB (optional) ---
 weaviate-client
 
+
 # --- MinIO / Object Storage ---
 boto3
 minio
