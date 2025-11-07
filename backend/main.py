@@ -7,6 +7,7 @@ from backend.core.logging import get_logger
 from backend.db.session import engine
 from backend.utils.cache import RedisClient
 from backend.utils.minio_client import MinioClient
+from backend.routes import system
 # from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
 import sqlalchemy
 
@@ -25,6 +26,12 @@ minio_client = MinioClient()
 # Weaviate client will be connected in Phase 1 Step 2
 
 # --- HEALTH & SYSTEM ROUTES --- #
+app.include_router(system.router)
+
+@app.get("/")
+async def root():
+    return {"message": "QuantForge AI Engine operational."}
+
 
 @app.get("/v1/health", tags=["System"])
 async def health_check():

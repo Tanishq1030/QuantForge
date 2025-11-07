@@ -20,27 +20,30 @@ class MinioClient:
     The class automatically connects to the configured MinIO instance
     defined in the .env file.
     """
-
-    def __init__(self):
-        try:
-            self.endpoint = os.getenv("MINIO_ENDPOINT", "localhost:9000")
-            self.access_key = os.getenv("MINIO_ACCESS_KEY")
-            self.secret_key = os.getenv("MINIO_SECRET_KEY")
-            self.use_ssl = os.getenv("MINIO_USE_SSL", "False").lower() == "true"
-
-            self.client = Minio(
-                endpoint=self.endpoint,
-                access_key=self.access_key,
-                secret_key=self.secret_key,
-                secure=self.use_ssl,
-            )
+    
+    class MinioClient:
+        def __init__(self):
+            try:
+                # Only add protocol for logging clarity — Minio SDK handles it internally.
+                protocol = "https" if settings.MINIO_USE_SSL else "http"
+                logger.info(f"🔗 Connecting to MinIO at {protocol}://{settings.MINIO_ENDPOINT}")
+                
+                self.client = Minio(
+                    settings.MINIO_ENDPOINT,
+                    access_key=settings.MINIO_ACCESS_KEY,
+                    secret_key=settings.MINIO_SECRET_KEY,
+                    secure=settings.MINIO_USE_SSL,
+                )
+                
+                # Quick health check
+                self.client.list_buckets()
+                logger.info(f"✅ Connected to MinIO at {settings.MINIO_ENDPOINT}")
             
-            logger.info(f"✅ Connected to MinIO at {self.endpoint}")
-
-        except Exception as e:
-            logger.error(f"❌ Failed to initialize MinIO client: {e}")
-            raise
-
+            except Exception as e:
+                logger.error(f"❌ Failed to initialize MinIO client: {e}")
+                self.client = None
+                
+                
     # ------------------------------------------------------------
     # 🗂️ Bucket Utilities
     # ------------------------------------------------------------
