@@ -1,0 +1,35 @@
+# --- Environment & Local Config ---
+.env
+*.env
+.idea/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- OS / IDE noise ---
+.DS_Store
+Thumbs.db
+
+# --- MinIO Data & Cache ---
+minio_data/
+*.meta
+*.bin
+*.bkp
+*.tmp
+*.usage-cache*
+mc.exe
+minio.exe
+
+
+# --- Logs & Artifacts ---
+*.log
+*.out
+*.pid
+
+# --- venv / builds ---
+venv/
+.env/
+*.egg-info/
+dist/
+build/
