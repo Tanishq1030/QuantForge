@@ -4,6 +4,7 @@ from minio import Minio
 from minio.error import S3Error
 from dotenv import load_dotenv
 from backend.core.logging import get_logger
+from backend.core.config import settings
 
 # Load environment variables
 load_dotenv()
@@ -21,27 +22,26 @@ class MinioClient:
     defined in the .env file.
     """
     
-    class MinioClient:
-        def __init__(self):
-            try:
-                # Only add protocol for logging clarity — Minio SDK handles it internally.
-                protocol = "https" if settings.MINIO_USE_SSL else "http"
-                logger.info(f"🔗 Connecting to MinIO at {protocol}://{settings.MINIO_ENDPOINT}")
-                
-                self.client = Minio(
-                    settings.MINIO_ENDPOINT,
-                    access_key=settings.MINIO_ACCESS_KEY,
-                    secret_key=settings.MINIO_SECRET_KEY,
-                    secure=settings.MINIO_USE_SSL,
-                )
-                
-                # Quick health check
-                self.client.list_buckets()
-                logger.info(f"✅ Connected to MinIO at {settings.MINIO_ENDPOINT}")
+    def __init__(self):
+        try:
+            # Only add protocol for logging clarity — Minio SDK handles it internally.
+            protocol = "https" if settings.MINIO_USE_SSL else "http"
+            logger.info(f"🔗 Connecting to MinIO at {protocol}://{settings.MINIO_ENDPOINT}")
             
-            except Exception as e:
-                logger.error(f"❌ Failed to initialize MinIO client: {e}")
-                self.client = None
+            self.client = Minio(
+                settings.MINIO_ENDPOINT,
+                access_key=settings.MINIO_ACCESS_KEY,
+                secret_key=settings.MINIO_SECRET_KEY,
+                secure=settings.MINIO_USE_SSL,
+            )
+            
+            # Quick health check
+            self.client.list_buckets()
+            logger.info(f"✅ Connected to MinIO at {settings.MINIO_ENDPOINT}")
+        
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize MinIO client: {e}")
+            self.client = None
                 
                 
     # ------------------------------------------------------------
