@@ -7,7 +7,7 @@ from backend.core.logging import get_logger
 from backend.db.session import engine
 from backend.utils.cache import RedisClient
 from backend.utils.minio_client import MinioClient
-from backend.routes import system, vector
+from backend.routes import system, vector, feeds
 # from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
 import sqlalchemy
 
@@ -19,15 +19,14 @@ app = FastAPI(
     description="QuantForge AI Engine — Core Backend Runtime",
 )
 
-
 # Initialize reusable clients
 redis_client = RedisClient()
 minio_client = MinioClient()
-# Weaviate client will be connected in Phase 1 Step 2
 
-# --- HEALTH & SYSTEM ROUTES --- #
+# Include routers
 app.include_router(system.router)
 app.include_router(vector.router)
+app.include_router(feeds.router)
 
 @app.get("/")
 async def root():

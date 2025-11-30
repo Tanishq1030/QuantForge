@@ -40,6 +40,10 @@ sentence-transformers>=2.2.0
 transformers>=4.30.0
 torch>=2.0.0
 
+# --- Data Feeds (Phase 1.3) ---
+feedparser>=6.0.0  # RSS/Atom feed parsing
+beautifulsoup4>=4.12.0  # HTML content extraction
+lxml>=4.9.0  # XML parsing backend
 
 # --- MinIO / Object Storage ---
 boto3
