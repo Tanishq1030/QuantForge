@@ -7,7 +7,7 @@ python-multipart
 sqlalchemy
 psycopg2-binary
 alembic
-asyncpg
+asyncpg  # PostgreSQL/TimescaleDB async driver
 
 # --- Redis / Caching ---
 redis
