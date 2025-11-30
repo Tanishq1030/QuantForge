@@ -31,8 +31,14 @@ loguru
 httpx
 huggingface-hub
 
-# --- Vector DB (optional) ---
-weaviate-client
+# --- Vector DB ---
+weaviate-client>=4.0.0
+anyio  # for async threadpool operations
+
+# --- Embeddings ---
+sentence-transformers>=2.2.0
+transformers>=4.30.0
+torch>=2.0.0
 
 
 # --- MinIO / Object Storage ---

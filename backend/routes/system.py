@@ -53,7 +53,7 @@ async def health_dependencies():
 	async def check_weaviate():
 		try:
 			weaviate_client = QuantForgeVectorStore()
-			if weaviate_client.client and weaviate_client.client.is_connection():
+			if weaviate_client.client and weaviate_client.client.is_ready():
 				results["weaviate"] = {"status": "✅ healthy"}
 			else:
 				results["weaviate"] = {"status": "❌ down"}
@@ -61,7 +61,7 @@ async def health_dependencies():
 		except Exception as e:
 			results["weaviate"] = {"status": "❌ down", "error": str(e)}
 			
-	await asynvio.gather(check_postgres(), check_redis(), check_minio(), check_weaviate())
+	await asyncio.gather(check_postgres(), check_redis(), check_minio(), check_weaviate())
 	
 	return {"dependencies": results}
 	

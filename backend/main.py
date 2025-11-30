@@ -7,7 +7,7 @@ from backend.core.logging import get_logger
 from backend.db.session import engine
 from backend.utils.cache import RedisClient
 from backend.utils.minio_client import MinioClient
-from backend.routes import system
+from backend.routes import system, vector
 # from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
 import sqlalchemy
 
@@ -27,6 +27,7 @@ minio_client = MinioClient()
 
 # --- HEALTH & SYSTEM ROUTES --- #
 app.include_router(system.router)
+app.include_router(vector.router)
 
 @app.get("/")
 async def root():

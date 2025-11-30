@@ -37,6 +37,14 @@ class Settings(BaseSettings):
     OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
     HF_API_KEY: str = os.getenv("HF_API_KEY", "")
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    
+    # --- Embedding Configuration ---
+    EMBEDDING_BACKEND: str = os.getenv("EMBEDDING_BACKEND", "huggingface")
+    HF_EMBEDDING_MODEL: str = os.getenv("HF_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+    HF_INFERENCE_API: str = os.getenv("HF_INFERENCE_API", "https://api-inference.huggingface.co/models")
+    OLLAMA_EMBED_MODEL: str = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
+    APP_NAME: str = os.getenv("APP_NAME", "QuantForge AI Engine")
+    APP_VERSION: str = os.getenv("APP_VERSION", "0.1.0")
 
     class Config:
         env_file = ".env"
