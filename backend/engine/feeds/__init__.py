@@ -10,8 +10,10 @@ Supports multiple data sources:
 
 from .base import BaseFeedConnector
 from .rss_connector import RSSFeedConnector
+from .binance_connector import BinanceConnector
 
 __all__ = [
     "BaseFeedConnector",
     "RSSFeedConnector",
+    "BinanceConnector",
 ]
