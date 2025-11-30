@@ -37,18 +37,78 @@ class TextPreprocessor:
         r'\b([A-Z]+)-USD\b',  # Crypto pairs (BTC-USD, ETH-USD)
     ]
     
-    # Known company to ticker mappings
+    # Known company to ticker mappings (expanded for better accuracy)
     COMPANY_TICKER_MAP = {
+        # Tech Giants
         "apple": "AAPL",
-        "tesla": "TSLA",
         "microsoft": "MSFT",
         "amazon": "AMZN",
         "google": "GOOGL",
+        "alphabet": "GOOGL",
         "meta": "META",
         "facebook": "META",
+        "netflix": "NFLX",
         "nvidia": "NVDA",
+        "amd": "AMD",
+        "intel": "INTC",
+        "qualcomm": "QCOM",
+        
+        # Electric Vehicles & Auto
+        "tesla": "TSLA",
+        "ford": "F",
+        "general motors": "GM",
+        "gm": "GM",
+        "rivian": "RIVN",
+        "lucid": "LCID",
+        
+        # Finance
+        "jpmorgan": "JPM",
+        "jp morgan": "JPM",
+        "bank of america": "BAC",
+        "wells fargo": "WFC",
+        "goldman sachs": "GS",
+        "morgan stanley": "MS",
+        "visa": "V",
+        "mastercard": "MA",
+        "paypal": "PYPL",
+        
+        # Consumer
+        "walmart": "WMT",
+        "target": "TGT",
+        "costco": "COST",
+        "nike": "NKE",
+        "starbucks": "SBUX",
+        "mcdonald's": "MCD",
+        "mcdonalds": "MCD",
+        "coca-cola": "KO",
+        "pepsi": "PEP",
+        "pepsico": "PEP",
+        
+        # Healthcare & Pharma
+        "pfizer": "PFE",
+        "moderna": "MRNA",
+        "johnson & johnson": "JNJ",
+        "johnson and johnson": "JNJ",
+        "abbvie": "ABBV",
+        "merck": "MRK",
+        
+        # Crypto (as USD pairs)
         "bitcoin": "BTC-USD",
+        "btc": "BTC-USD",
         "ethereum": "ETH-USD",
+        "eth": "ETH-USD",
+        "binance coin": "BNB-USD",
+        "bnb": "BNB-USD",
+        "cardano": "ADA-USD",
+        "ada": "ADA-USD",
+        "solana": "SOL-USD",
+        "sol": "SOL-USD",
+        "ripple": "XRP-USD",
+        "xrp": "XRP-USD",
+        "dogecoin": "DOGE-USD",
+        "doge": "DOGE-USD",
+        "polygon": "MATIC-USD",
+        "matic": "MATIC-USD",
     }
     
     # Category keywords
