@@ -7,7 +7,7 @@ from backend.core.logging import get_logger
 from backend.db.session import engine
 from backend.utils.cache import RedisClient
 from backend.utils.minio_client import MinioClient
-from backend.routes import system, vector, feeds, market
+from backend.routes import system, vector, feeds, market, analysis
 # from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
 import sqlalchemy
 
@@ -28,6 +28,7 @@ app.include_router(system.router)
 app.include_router(vector.router)
 app.include_router(feeds.router)
 app.include_router(market.router)
+app.include_router(analysis.router)
 
 @app.get("/")
 async def root():
