@@ -20,6 +20,8 @@ bcrypt
 pyotp
 email-validator
 requests
+sentry-sdk
+
 
 # --- Data + AI Core ---
 pandas
