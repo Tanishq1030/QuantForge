@@ -19,6 +19,7 @@ from backend.engine.llm.prompts import get_prompt_manager, PromptType
 from backend.engine.memory.vector_store import QuantForgeVectorStore
 from backend.engine.memory.timeseries_store import get_timeseries_store
 from backend.engine.parsers.text_preprocessor import TextPreprocessor
+from backend.engine.validators import get_validator, get_calibrator
 
 logger = get_logger(__name__)
 
@@ -46,8 +47,10 @@ class AIEngine:
         self.vector_store = QuantForgeVectorStore()
         self.timeseries = get_timeseries_store()
         self.preprocessor = TextPreprocessor()
+        self.validator = get_validator()
+        self.calibrator = get_calibrator()
         
-        logger.info("AIEngine initialized")
+        logger.info("AIEngine initialized with validation")
     
     async def analyze_asset(
         self,
@@ -293,16 +296,35 @@ class AIEngine:
             # Parse JSON response
             analysis = self._parse_llm_json(llm_response["text"])
             
-            return {
+            # Validate response
+            validation_result = self.validator.validate_analysis(analysis, context)
+            
+            # Calibrate confidence
+            base_confidence = analysis.get("confidence", 0.5)
+            adjusted_confidence, reasoning = self.calibrator.calibrate(
+                base_confidence,
+                context,
+                validation_result
+            )
+            
+            result = {
                 "ticker": ticker,
                 "analysis_type": "sentiment_only",
                 "summary": f"Sentiment: {analysis.get('sentiment', 'neutral')}",
                 "sentiment": analysis.get("sentiment", "neutral"),
-                "confidence": analysis.get("confidence", 0.5),
+                "confidence": adjusted_confidence,
                 "key_insights": analysis.get("themes", []),
                 "impact": analysis.get("impact", ""),
                 "model_used": llm_response["provider"]
             }
+            
+            # Add validation warnings if verbose or if critical
+            if validation_result.get("warnings"):
+                result["validation_warnings"] = validation_result["warnings"]
+                if reasoning:
+                    result["confidence_reasoning"] = reasoning
+            
+            return result
         except Exception as e:
             logger.error(f"LLM call failed: {e}")
             # Fallback to rule-based
