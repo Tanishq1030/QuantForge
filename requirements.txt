@@ -56,6 +56,6 @@ celery
 python-dotenv
 black
 isort
-pytest>=7.4.0  # Unit testing framework
-pytest-asyncio>=0.21.0  # Async test support
+pytest  # Unit testing framework
+pytest-asyncio # Async test support
 
