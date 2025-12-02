@@ -9,6 +9,7 @@ from backend.utils.cache import RedisClient
 from backend.utils.minio_client import MinioClient
 from backend.routes import system, vector, feeds, market, analysis, ai
 from backend.core.sentry import init_sentry
+from backend.middleware.rate_limiter import get_rate_limiter, rate_limit_middleware
 # from backend.engine.memory.vector_store import WeaviateClient  # to be implemented later
 import sqlalchemy
 
@@ -22,6 +23,9 @@ app = FastAPI(
     version=settings.APP_VERSION,
     description="QuantForge AI Engine — Core Backend Runtime",
 )
+
+# Add rate limiting middleware
+app.middleware("http")(rate_limit_middleware)
 
 # Initialize reusable clients
 redis_client = RedisClient()
@@ -103,3 +107,23 @@ async def check_dependencies():
 
     logger.info("Dependency check results: " + str(status))
     return JSONResponse(status)
+
+# Startup event
+@app.on_event("startup")
+async def startup_event():
+    logger.info("🚀 QuantForge AI Engine starting...")
+    
+    # Start rate limiter
+    limiter = get_rate_limiter()
+    await limiter.start()
+    logger.info("✅ Rate limiter started")
+
+# Shutdown event  
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("Shutting down QuantForge...")
+    
+    # Stop rate limiter
+    limiter = get_rate_limiter()
+    await limiter.stop()
+    logger.info("✅ Rate limiter stopped")
