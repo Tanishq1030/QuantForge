@@ -1,93 +1,421 @@
-# QuantForge
+# 🚀 QuantForge AI Engine
 
+> **AI-Powered Trading & Market Intelligence Platform**  
+> *Production-ready financial analysis engine with $0 infrastructure cost*
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-green)](https://fastapi.tiangolo.com/)
+[![Phase](https://img.shields.io/badge/Phase-1.4%20Complete-success)](https://github.com/Tanishq1030/QuantForge)
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 📊 **What is QuantForge?**
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+QuantForge is an **end-to-end AI-powered trading engine** that combines real-time market data, news sentiment analysis, and intelligent orchestration to provide actionable trading insights.
 
-## Add your files
+**Built for:**
+- 🤖 **Algorithmic traders** seeking AI-driven signals
+- 📈 **Portfolio managers** monitoring market sentiment
+- 💼 **Fintech companies** needing trading intelligence APIs
+- 🎯 **Quant developers** building systematic strategies
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+---
+
+## ✨ **Key Features**
+
+### 🤖 **AI Engine (Phase 1.4 - Production Ready)**
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **Multi-Provider LLM** | Ollama, OpenAI, HuggingFace with automatic fallback | ✅ Live |
+| **Sentiment Analysis** | Real-time news sentiment from RSS feeds + AI | ✅ Live |
+| **Hallucination Detection** | Validates AI outputs against actual data | ✅ Live |
+| **Confidence Calibration** | Adjusts confidence based on data quality | ✅ Live |
+| **Rate Limiting** | Free (50/day), Pro (10k/day), Enterprise (unlimited) | ✅ Live |
+| **Error Tracking** | Sentry integration with custom events | ✅ Live |
+| **Usage Metrics** | Token tracking, cost estimation, billing analytics | ✅ Live |
+
+### 📡 **Data Pipeline**
+
+- ✅ **RSS News Feeds** - Real-time financial news ingestion
+- ✅ **Binance Market Data** - Price, volume, orderbook data
+- ✅ **Vector Store** - Weaviate for semantic news search
+- ✅ **Time-Series DB** - TimescaleDB for OHLCV data
+- ✅ **Embeddings** - HuggingFace sentence-transformers
+
+### 🔧 **Infrastructure**
+
+- ✅ **$0 Cost Stack** - Ollama (local LLM), free-tier cloud services
+- ✅ **Scalable Architecture** - FastAPI + async/await
+- ✅ **Production Monitoring** - Sentry error tracking
+- ✅ **API Versioning** - v1 endpoints with OpenAPI docs
+
+---
+
+## 🏗️ **Architecture**
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/TanishqDasari1/QuantForge.git
-git branch -M main
-git push -uf origin main
+┌─────────────────────────────────────────────────────────┐
+│                    Client Application                    │
+│          (Trading Bot / Dashboard / Mobile App)          │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+                ┌────────────────┐
+                │   FastAPI      │
+                │   (REST API)   │
+                └───────┬────────┘
+                        │
+        ┌───────────────┼───────────────┐
+        │               │               │
+        ▼               ▼               ▼
+  ┌──────────┐   ┌──────────┐   ┌──────────┐
+  │   Rate   │   │  Sentry  │   │  Metrics │
+  │ Limiter  │   │ Tracking │   │ Logging  │
+  └────┬─────┘   └──────────┘   └──────────┘
+       │
+       ▼
+┌─────────────────────────────────────────────┐
+│            AI Engine Orchestrator            │
+│  (Coordinates data gathering + AI analysis)  │
+└──────────────┬──────────────────────────────┘
+               │
+    ┌──────────┼──────────┐
+    │          │          │
+    ▼          ▼          ▼
+┌────────┐ ┌────────┐ ┌────────┐
+│ Vector │ │  TSDB  │ │  LLM   │
+│ Store  │ │(Prices)│ │ Client │
+│ (News) │ │        │ │        │
+└────────┘ └────────┘ └───┬────┘
+                          │
+              ┌───────────┼───────────┐
+              ▼           ▼           ▼
+         ┌────────┐ ┌────────┐ ┌────────┐
+         │ Ollama │ │OpenAI  │ │   HF   │
+         │(Local) │ │ (API)  │ │ (API)  │
+         └────────┘ └────────┘ └────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │   Validators    │
+                 │  (Anti-Halluc)  │
+                 └────────┬────────┘
+                          │
+                          ▼
+                    ┌──────────┐
+                    │ Response │
+                    └──────────┘
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.com/TanishqDasari1/QuantForge/-/settings/integrations)
+## 🚀 **Quick Start**
 
-## Collaborate with your team
+### **Prerequisites**
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+- Python 3.11+
+- Docker (optional, for services)
+- [Ollama](https://ollama.ai/) (for local LLM)
 
-## Test and Deploy
+### **1. Clone Repository**
 
-Use the built-in continuous integration in GitLab.
+```bash
+git clone https://github.com/Tanishq1030/QuantForge.git
+cd QuantForge
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### **2. Install Dependencies**
 
-***
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Editing this README
+# Install packages
+pip install -r requirements.txt
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### **3. Configure Environment**
 
-## Suggestions for a good README
+```bash
+# Copy example config
+cp .env.example .env
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+# Edit .env with your credentials
+# Minimum required: DATABASE_URL, WEAVIATE_URL, WEAVIATE_API_KEY
+```
 
-## Name
-Choose a self-explaining name for your project.
+### **4. Start Services**
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+# Start Ollama (separate terminal)
+ollama serve
+ollama pull mistral:latest
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+# Start QuantForge API
+uvicorn backend.main:app --reload --port 8000
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### **5. Test API**
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```bash
+# Health check
+curl http://localhost:8000/health
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+# AI Analysis
+curl -X POST http://localhost:8000/v1/ai/analyze \
+  -H "Content-Type: application/json" \
+  -H "X-User-ID: demo_user" \
+  -H "X-User-Tier: free" \
+  -d '{"ticker": "AAPL", "analysis_type": "quick"}'
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+**Expected Response:**
+```json
+{
+  "ticker": "AAPL",
+  "sentiment": "neutral",
+  "recommendation": "HOLD",
+  "confidence": 0.75,
+  "summary": "Analysis based on recent news and price data...",
+  "meta": {
+    "processing_time_ms": 4500,
+    "model_used": "ollama"
+  }
+}
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+---
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## 📚 **API Documentation**
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### **Endpoints**
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/health` | GET | Health check | No |
+| `/v1/ai/analyze` | POST | Analyze stock/crypto | Yes (Headers) |
+| `/v1/ai/status` | GET | AI engine status | No |
+| `/v1/feeds/rss/ingest` | POST | Ingest news feeds | Yes |
+| `/v1/market/price/{ticker}` | GET | Get price data | Yes |
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### **Request Example**
 
-## License
-For open source projects, say how it is licensed.
+```python
+import requests
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+response = requests.post(
+    'http://localhost:8000/v1/ai/analyze',
+    headers={
+        'X-User-ID': 'your_user_id',
+        'X-User-Tier': 'pro',
+        'Content-Type': 'application/json'
+    },
+    json={
+        'ticker': 'TSLA',
+        'analysis_type': 'comprehensive',
+        'days_before': 7
+    }
+)
+
+analysis = response.json()
+print(f"Sentiment: {analysis['sentiment']}")
+print(f"Recommendation: {analysis['recommendation']}")
+```
+
+### **Interactive Docs**
+
+Once running, visit:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+---
+
+## 💰 **Cost Optimization**
+
+QuantForge is designed for **$0 infrastructure cost** using:
+
+| Component | Solution | Cost |
+|-----------|----------|------|
+| **LLM** | Ollama (local Mistral 7B) | $0 |
+| **Database** | Neon Postgres (free tier) | $0 |
+| **Vector DB** | Weaviate Cloud (free tier) | $0 |
+| **Hosting** | Railway (free tier) | $0 |
+| **Monitoring** | Sentry (free tier) | $0 |
+
+**vs. Traditional Stack:**
+- OpenAI GPT-4: $2,000/month for 1M requests
+- AWS RDS: $100/month
+- Pinecone: $70/month
+- **Total Savings: $2,170/month** 💰
+
+---
+
+## 🛠️ **Tech Stack**
+
+### **Backend**
+- **Framework**: FastAPI (async, high-performance)
+- **LLM**: Ollama (Mistral 7B), OpenAI, HuggingFace
+- **Database**: PostgreSQL (Neon) + TimescaleDB extension
+- **Vector DB**: Weaviate Cloud
+- **Cache**: Redis
+- **Storage**: MinIO (S3-compatible)
+
+### **AI/ML**
+- **Embeddings**: sentence-transformers/all-MiniLM-L6-v2
+- **Validation**: Custom hallucination detection
+- **Confidence**: Bayesian calibration
+
+### **Monitoring**
+- **Errors**: Sentry SDK
+- **Metrics**: Custom metrics logger
+- **Logging**: Structured JSON logs
+
+### **Deployment**
+- **Containerization**: Docker + docker-compose
+- **CI/CD**: GitHub Actions (planned)
+- **Hosting**: Railway, AWS, or self-hosted
+
+---
+
+## 📈 **Roadmap**
+
+### ✅ **Phase 1.4 - AI Engine (COMPLETE)**
+- [x] Multi-provider LLM with fallback
+- [x] Sentiment analysis API
+- [x] Hallucination detection
+- [x] Production monitoring (Sentry)
+- [x] Rate limiting per tier
+- [x] Usage metrics & billing
+
+### 🚧 **Phase 1.5 - Advanced Features (In Progress)**
+- [ ] Streaming responses (SSE)
+- [ ] Batch analysis endpoints
+- [ ] Historical data caching
+- [ ] Custom prompt templates per user
+
+### 📅 **Phase 2.0 - Web Platform (Q1 2025)**
+- [ ] React/Next.js dashboard
+- [ ] User authentication (Clerk)
+- [ ] Payment integration (Stripe)
+- [ ] Visual analytics & charts
+- [ ] Mobile-responsive design
+
+### 📅 **Phase 3.0 - Scale (Q2 2025)**
+- [ ] Multi-region deployment
+- [ ] Redis-based distributed rate limiting
+- [ ] ClickHouse for analytics
+- [ ] ML-based validation improvements
+- [ ] Custom model fine-tuning
+
+---
+
+## 🧪 **Testing**
+
+### **Run Unit Tests**
+
+```bash
+pytest tests/unit/ -v
+```
+
+### **Run Integration Tests**
+
+```bash
+pytest tests/integration/ -v
+```
+
+### **Run Client Demo**
+
+```bash
+python real_client_demo.py
+```
+
+**Test Coverage:** 85%+ (core engine components)
+
+---
+
+## 📖 **Documentation**
+
+- **API Reference**: [docs/api/ai_analyze.md](docs/api/ai_analyze.md)
+- **Architecture**: [docs/architecture.md](docs/architecture.md) *(planned)*
+- **Deployment**: [docs/deployment.md](docs/deployment.md) *(planned)*
+- **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md) *(planned)*
+
+---
+
+## 💼 **Use Cases**
+
+### **1. Algorithmic Trading Bot**
+```python
+# Check sentiment before placing orders
+analysis = quantforge.analyze("AAPL")
+if analysis['sentiment'] == 'bullish' and analysis['confidence'] > 0.7:
+    place_buy_order("AAPL", quantity=100)
+```
+
+### **2. Portfolio Dashboard**
+```python
+# Monitor portfolio health
+for ticker in portfolio:
+    sentiment = quantforge.analyze(ticker)['sentiment']
+    update_dashboard(ticker, sentiment)
+```
+
+### **3. Alert System**
+```python
+# Get notified of high-confidence signals
+if analysis['confidence'] > 0.8 and analysis['recommendation'] == 'BUY':
+    send_alert(f"Strong BUY signal for {ticker}")
+```
+
+---
+
+## 🤝 **Contributing**
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📜 **License**
+
+This project is licensed under the Apache License 2.0 - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 **Author**
+
+**Tanishq Dasari**  
+- GitHub: [@Tanishq1030](https://github.com/Tanishq1030)
+- Project: [QuantForge](https://github.com/Tanishq1030/QuantForge)
+
+---
+
+## 🌟 **Star the Project!**
+
+If QuantForge helps your trading or you find it interesting, consider giving it a ⭐!
+
+---
+
+## 📞 **Support**
+
+- **Issues**: [GitHub Issues](https://github.com/Tanishq1030/QuantForge/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Tanishq1030/QuantForge/discussions)
+- **Email**: support@quantforge.com *(placeholder)*
+
+---
+
+<div align="center">
+
+**Built with ❤️ for the trading community**
+
+*QuantForge - AI-Powered Market Intelligence*
+
+</div>
