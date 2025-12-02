@@ -69,15 +69,33 @@ class RSSFeedConnector(BaseFeedConnector):
         return all_documents
     
     async def _fetch_single_feed(self, url: str) -> List[Dict[str, Any]]:
-        """Fetch and parse a single RSS feed."""
-        # Run blocking feedparser in thread pool
+        """Fetch and parse a single RSS feed with proper User-Agent."""
+        
+        # Fetch with proper User-Agent (many feeds block default UA)
+        try:
+            headers = {"User-Agent": "QuantForge/1.0 (+https://quantforge.ai)"}
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                response = await client.get(url, headers=headers)
+                response.raise_for_status()
+                feed_content = response.text
+        except Exception as e:
+            logger.error(f"HTTP fetch failed for {url}: {e}")
+            raise
+        
+        # Parse feed content
         def _parse():
-            return feedparser.parse(url)
+            return feedparser.parse(feed_content)
         
         feed = await asyncio.to_thread(_parse)
         
         if feed.get("bozo"):  # Parse error
             logger.warning(f"RSS parse error for {url}: {feed.get('bozo_exception')}")
+        
+        if not feed.entries:
+            logger.warning(f"No entries found in feed: {url}")
+            return []
+        
+        logger.info(f"Found {len(feed.entries)} entries in feed: {url}")
         
         documents = []
         for entry in feed.entries:

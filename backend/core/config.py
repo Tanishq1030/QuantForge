@@ -45,6 +45,33 @@ class Settings(BaseSettings):
     OLLAMA_EMBED_MODEL: str = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
     APP_NAME: str = os.getenv("APP_NAME", "QuantForge AI Engine")
     APP_VERSION: str = os.getenv("APP_VERSION", "0.1.0")
+    
+    # --- LLM Configuration (Phase 1.4) ---
+    # Hugging Face LLM (Primary - Free tier)
+    HF_LLM_MODEL: str = os.getenv("HF_LLM_MODEL", "mistralai/Mistral-7B-Instruct-v0.2")
+    HF_LLM_ENDPOINT: str = os.getenv("HF_LLM_ENDPOINT", "https://api-inference.huggingface.co/models")
+    
+    # OpenAI (Paid Fallback)
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+    OPENAI_MAX_TOKENS: int = int(os.getenv("OPENAI_MAX_TOKENS", "1000"))
+    
+    # Ollama LLM (Local Fallback)
+    OLLAMA_LLM_MODEL: str = os.getenv("OLLAMA_LLM_MODEL", "mistral:latest")
+    
+    # --- Authentication (Clerk) ---
+    CLERK_SECRET_KEY: str = os.getenv("CLERK_SECRET_KEY", "")
+    CLERK_PUBLISHABLE_KEY: str = os.getenv("CLERK_PUBLISHABLE_KEY", "")
+    CLERK_JWT_KEY: str = os.getenv("CLERK_JWT_KEY", "")
+    
+    # --- Error Tracking (Sentry) ---
+    SENTRY_DSN: str = os.getenv("SENTRY_DSN", "")
+    SENTRY_ENVIRONMENT: str = os.getenv("SENTRY_ENVIRONMENT", "development")
+    SENTRY_TRACES_SAMPLE_RATE: float = float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.1"))
+    
+   # --- Payments (Stripe) ---
+    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
+    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
     class Config:
         env_file = ".env"
