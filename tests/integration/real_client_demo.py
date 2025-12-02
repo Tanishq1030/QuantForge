@@ -71,8 +71,16 @@ def demo_1_trading_bot():
     
     api = QuantForgeAPI(API_BASE_URL, USER_ID, USER_TIER)
     
-    # Bot's configuration
-    watchlist = ["AAPL", "TSLA", "NVDA"]
+    # Let user input stocks
+    print(f"{Fore.WHITE}Enter stocks to analyze (comma-separated, e.g., AAPL,TSLA,NVDA):")
+    user_input = input(f"{Fore.CYAN}Stocks: {Style.RESET_ALL}").strip()
+    
+    if user_input:
+        watchlist = [s.strip().upper() for s in user_input.split(",")]
+    else:
+        watchlist = ["AAPL", "TSLA", "NVDA"]  # Default
+        print(f"{Fore.YELLOW}Using default: {', '.join(watchlist)}")
+    
     confidence_threshold = 0.6
     
     print(f"{Fore.WHITE}📊 Trading Bot Started")
@@ -135,14 +143,22 @@ def demo_2_portfolio_dashboard():
     
     api = QuantForgeAPI(API_BASE_URL, USER_ID, USER_TIER)
     
-    # User's actual portfolio
-    portfolio = {
-        "AAPL": 50,   # 50 shares
-        "MSFT": 30,
-        "GOOGL": 20,
-        "TSLA": 15,
-        "AMZN": 10
-    }
+    # Let user input portfolio
+    print(f"{Fore.WHITE}Enter your portfolio (format: TICKER:SHARES, e.g., AAPL:50,MSFT:30):")
+    user_input = input(f"{Fore.CYAN}Portfolio: {Style.RESET_ALL}").strip()
+    
+    portfolio = {}
+    if user_input:
+        try:
+            for item in user_input.split(","):
+                ticker, shares = item.strip().split(":")
+                portfolio[ticker.upper()] = int(shares)
+        except:
+            print(f"{Fore.YELLOW}Invalid format. Using default portfolio.")
+            portfolio = {"AAPL": 50, "MSFT": 30, "GOOGL": 20, "TSLA": 15, "AMZN": 10}
+    else:
+        portfolio = {"AAPL": 50, "MSFT": 30, "GOOGL": 20, "TSLA": 15, "AMZN": 10}
+        print(f"{Fore.YELLOW}Using default portfolio")
     
     print(f"{Fore.WHITE}📊 Your Investment Portfolio\n")
     print(f"{Fore.WHITE}{'Ticker':<8} {'Shares':<8} {'Sentiment':<12} {'Action':<12} {'Confidence'}")
@@ -207,8 +223,15 @@ def demo_3_alert_system():
     
     api = QuantForgeAPI(API_BASE_URL, USER_ID, USER_TIER)
     
-    # Stocks to monitor
-    watch_for_signals = ["AAPL", "NVDA", "TSLA"]
+    # Let user input stocks to monitor
+    print(f"{Fore.WHITE}Enter stocks to monitor for alerts (comma-separated):")
+    user_input = input(f"{Fore.CYAN}Stocks: {Style.RESET_ALL}").strip()
+    
+    if user_input:
+        watch_for_signals = [s.strip().upper() for s in user_input.split(",")]
+    else:
+        watch_for_signals = ["AAPL", "NVDA", "TSLA"]
+        print(f"{Fore.YELLOW}Using default: {', '.join(watch_for_signals)}")
     
     print(f"{Fore.WHITE}🔔 Alert System Active")
     print(f"{Fore.WHITE}   Monitoring: {', '.join(watch_for_signals)}")
