@@ -40,7 +40,7 @@ def init_sentry():
             integrations=[
                 FastApiIntegration(
                     transaction_style="url",  # Group by URL pattern
-                    failed_request_status_codes=[400, 500]
+                    failed_request_status_codes={400, 500}  # Set instead of list
                 ),
                 AsyncioIntegration()
             ],
